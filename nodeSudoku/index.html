@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <title>Sudoku Generator</title>
+    <link rel="stylesheet" type="text/css" href="index.css"/>
+  </head>
+  <body>
+
+<table>
+    <tr><td>Number of puzzles:</td>
+      <td colspan="2">
+        <input type="text" id="numberOfPuzzles" size="2" maxlength="4" value="1"/> (maximum 1000)
+      </td>
+    </tr>
+    
+    <tr><td>Puzzles per page:</td><td colspan="2">
+        <select id="perPage">
+            <option value="1">1</option>
+            <option value="4">4</option>
+        </select>
+        </td></tr>
+    <tr><td>Difficulty:</td><td colspan="2"><select name="difficulty">
+                    <option value="Any">Random</option>
+                    <option value="Easy">Easy</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Hard">Hard</option>
+                    <option value="Very hard">Very hard</option>
+                </select>
+        </td>
+    </tr>
+    <tr><td>Include solutions:</td><td><input type="checkbox" name="solutions" /></td>
+    <td><input type="button" id="goBtn" value="Go" /></td></tr>
+</table>
+
+
+</div>
+
+    <!-- You can also require other files to run in this process -->
+    <script src="./renderer.js"></script>
+  </body>
+  
+</html>
