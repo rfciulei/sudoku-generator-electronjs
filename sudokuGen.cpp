@@ -11,6 +11,8 @@
 
 using namespace std;
 
+static int completed = 0;
+
 class Sudoku
 {
 private:
@@ -206,21 +208,23 @@ bool Sudoku::verifyGridStatus()
 // START: Printing the grid
 void Sudoku::printGrid()
 {
-  for (int i = 0; i < 9; i++)
-  {
-    for (int j = 0; j < 9; j++)
-    {
-      if (grid[i][j] == 0)
-        cout << ".";
-      else
-        cout << grid[i][j];
-      cout << "|";
-    }
-    cout << endl;
-  }
+  // for (int i = 0; i < 9; i++)
+  // {
+  //   for (int j = 0; j < 9; j++)
+  //   {
+  //     if (grid[i][j] == 0)
+  //       cout << ".";
+  //     else
+  //       cout << grid[i][j];
+  //     cout << "|";
+  //   }
+  //   cout << endl;
+  // }
 
-  cout << "\nDifficulty of current sudoku(0 being easiest): " << this->difficultyLevel;
-  cout << endl;
+  cout << "Loading " << double(completed) / 10 << "%";
+  completed++;
+  cout << "\r";
+  flush(cout);
 }
 // END: Printing the grid
 
@@ -481,7 +485,7 @@ void Sudoku::calculateDifficulty()
 int main(int argc, char const *argv[])
 {
 
-  for (int i = 0; i < 1001; i++)
+  for (int i = 0; i < 101; i++)
   {
     // Initialising seed for random number generation
     srand(time(NULL) + i);
