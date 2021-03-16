@@ -482,48 +482,44 @@ void Sudoku::calculateDifficulty()
 int main(int argc, char *argv[])
 {
 
-  // cout << argv[1];
   int size = atoi(argv[1]);
   int difficulty = atoi(argv[2]);
   bool includeSolutions = (bool)atoi(argv[3]);
 
-  // cout << "number of puzzles: " << size << endl;
-  // cout << "difficulty : " << difficulty << endl;
-  // cout << "solutions : " << includeSolutions << endl;
-
   cout << argv;
+  cout << "SOMETHING PLS ";
 
-  for (int i = 0; i < size; i++)
-  {
-    // Initialising seed for random number generation
-    srand(time(NULL) + i);
+  // for (int i = 0; i < size; i++)
+  // {
+  //   // Initialising seed for random number generation
+  //   srand(time(NULL) + i);
 
-    // Creating an instance of Sudoku
-    Sudoku *puzzle = new Sudoku();
+  //   // Creating an instance of Sudoku
+  //   Sudoku *puzzle = new Sudoku();
 
-    // Creating a seed for puzzle generation
-    puzzle->createSeed();
+  //   // Creating a seed for puzzle generation
+  //   puzzle->createSeed();
 
-    // Generating the puzzle
-    puzzle->genPuzzle();
+  //   // Generating the puzzle
+  //   puzzle->genPuzzle();
 
-    // Calculating difficulty of puzzle
-    puzzle->calculateDifficulty();
+  //   // Calculating difficulty of puzzle
+  //   puzzle->calculateDifficulty();
 
-    // testing by printing the grid
-    // puzzle->printGrid();
+  //   // testing by printing the grid
+  //   // puzzle->printGrid();
 
-    // Printing the grid into SVG file
+  //   // Printing the grid into SVG file
 
-    string rem = "sudokuGen";
-    string path = argv[0];
+  //   string rem = "sudokuGen";
+  //   string path = argv[0];
 
-    path = path.substr(0, path.size() - rem.size());
-    puzzle->printSVG(path, i);
+  //   path = path.substr(0, path.size() - rem.size());
+  //   puzzle->printSVG(path, i);
 
-    // freeing the memory
-    delete puzzle;
-  }
+  //   // freeing the memory
+  //   delete puzzle;
+  // }
 
   return 0;
 }

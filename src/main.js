@@ -2,7 +2,19 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
 const fs = require("fs");
-const exec = require("child_process").exec;
+const child_process = require("child_process");
+const spawn = require("child_process").spawn;
+
+let cppDirPath = path.join(__dirname, "cpp");
+let execPath = path.join(cppDirPath, "a.exe");
+
+let compileCommand =
+  "g++ " +
+  path.join(cppDirPath, "sudokuGen.cpp") +
+  " -o " +
+  path.join(cppDirPath, "a.exe");
+
+let execCommand = "";
 
 function createWindow() {
   // Create the browser window.
@@ -22,7 +34,7 @@ function createWindow() {
   win.webContents.openDevTools();
 
   ipcMain.on("toMain", (event, data) => {
-    let compile = true;
+    let compile = false;
     args = new Array();
 
     args.push(data.numberOfPuzzles);
@@ -35,36 +47,49 @@ function createWindow() {
       argsString += " ";
       argsString += args[i];
     }
+    execCommand = execPath + " " + argsString;
+
+    console.log(compileCommand);
+    console.log(execCommand);
 
     //ISSUE : does not verify if g++ is present on the system
     if (compile) {
-      exec(
-        "g++ sudokuGen.cpp " + argsString,
-        function callback(error, stdout, stderr) {
-          if (!error) {
-            exec("a.exe", function callback(error, stdout, stderr) {
-              if (!error) {
-                console.log("[FINISHED] : compilation");
-                win.webContents.send("fromMain", "finished");
-              }
-            });
-          }
-        }
-      );
+      compileCode(win);
+      console.log("[FINISHED] : a.exe compilation");
+      executeCpp(win);
+      console.log("[FINISHED] : a.exe execution");
     } else {
-      cppDirPath = path.join(__dirname, "cpp");
-      exePath = path.join(cppDirPath, "a.exe" + argsString);
-
-      exec(exePath, function callback(error, stdout, stderr) {
-        console.log(stdout);
-        if (!error) {
-          console.log("[FINISHED] : a.exe execution");
-          win.webContents.send("fromMain", "finished");
-        }
-      });
+      executeCpp(win);
     }
   });
 }
+
+const executeCpp = (win) => {
+  exec = spawn(execPath, [argsString]);
+  exec.stdout.on("data", function (data) {
+    console.log("stdout: " + data.toString());
+  });
+  exec.stderr.on("data", function (data) {
+    console.log("stderr: " + data.toString());
+  });
+  exec.on("exit", function (code) {
+    console.log("child process exited with code " + code.toString());
+    win.webContents.send("fromMain", "finished");
+  });
+};
+
+const compileCode = (win) => {
+  comp = spawn(compileCommand, []);
+  comp.stdout.on("data", function (data) {
+    console.log("stdout: " + data.toString());
+  });
+  comp.stderr.on("data", function (data) {
+    console.log("stderr: " + data.toString());
+  });
+  comp.on("exit", function (code) {
+    console.log("child process exited with code " + code.toString());
+  });
+};
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
