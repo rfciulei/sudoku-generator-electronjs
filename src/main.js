@@ -53,7 +53,7 @@ function createWindow() {
       );
     } else {
       cppDirPath = path.join(__dirname, "cpp");
-      exePath = path.join(cppDirPath, "a.exe");
+      exePath = path.join(cppDirPath, "a.exe" + argsString);
 
       console.log(exePath);
 
