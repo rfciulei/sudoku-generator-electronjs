@@ -12,7 +12,7 @@ window.api.receive("fromMain", (data) => {
     document.getElementById("btnGo").disabled = false;
     console.log("[FINISHED] : a.exe ");
   }
-  // document.getElementsByClassName("loaderRoot").innerHTML = "";
+  document.getElementById("loaderRoot").innerHTML = "";
 });
 document.getElementById("btnGo").addEventListener("click", go, false);
 
