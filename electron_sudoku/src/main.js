@@ -22,7 +22,7 @@ function createWindow() {
   win.webContents.openDevTools();
 
   ipcMain.on("toMain", (event, data) => {
-    let compile = true;
+    let compile = false;
     args = new Array();
 
     args.push(data.numberOfPuzzles);
@@ -35,7 +35,6 @@ function createWindow() {
       argsString += " ";
       argsString += args[i];
     }
-    console.log("args for main.cpp: " + argsString);
 
     if (compile) {
       exec(
@@ -44,7 +43,7 @@ function createWindow() {
           if (!error) {
             exec("a.exe", function callback(error, stdout, stderr) {
               if (!error) {
-                console.log("[FINISHED] : main.cpp");
+                console.log("[FINISHED] : g++ sudokuGen.cpp");
                 win.webContents.send("fromMain", "finished");
               }
             });
@@ -52,10 +51,14 @@ function createWindow() {
         }
       );
     } else {
-      win.webContents.send("fromMain", data);
-      exec("a.exe", function callback(error, stdout, stderr) {
+      cppDirPath = path.join(__dirname, "cpp");
+      exePath = path.join(cppDirPath, "a.exe");
+
+      console.log(exePath);
+
+      exec(exePath, function callback(error, stdout, stderr) {
         if (!error) {
-          console.log("[FINISHED] : main.cpp");
+          win.webContents.send("fromMain", "finished");
         }
       });
     }

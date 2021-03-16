@@ -9,11 +9,13 @@
 window.api.receive("fromMain", (data) => {
   // console.log("Received " + JSON.stringify(data));
   if (data === "finished") {
+    document.getElementById("btnGo").disabled = false;
     console.log("[FINISHED] : a.exe ");
   }
   // document.getElementsByClassName("loaderRoot").innerHTML = "";
 });
 document.getElementById("btnGo").addEventListener("click", go, false);
+
 function go() {
   let data = {
     numberOfPuzzles: document.getElementById("numberOfPuzzles").value,
@@ -22,11 +24,13 @@ function go() {
     solutions: document.getElementById("solutions").checked,
   };
 
+  //disable button until loader it finished
+  document.getElementById("btnGo").disabled = true;
+
+  //send data to main process
   window.api.send("toMain", data);
 
-  let loaderHTML = `<div class="loader">
-<div class="loading_1"></div>
-</div>`;
-
+  //add the loader
+  let loaderHTML = `<div class="loader"><div class="loading_1"></div></div>`;
   document.getElementById("loaderRoot").innerHTML = loaderHTML;
 }
