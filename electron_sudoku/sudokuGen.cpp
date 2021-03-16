@@ -485,7 +485,7 @@ void Sudoku::calculateDifficulty()
 int main(int argc, char const *argv[])
 {
 
-  for (int i = 0; i < 101; i++)
+  for (int i = 0; i < 10; i++)
   {
     // Initialising seed for random number generation
     srand(time(NULL) + i);
