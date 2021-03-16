@@ -6,6 +6,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <cstdlib>
 
 #define UNASSIGNED 0
 
@@ -220,11 +221,7 @@ void Sudoku::printGrid()
     }
     cout << endl;
   }
-
-  // // cout << "Loading " << double(completed) / 10 << "%";
-  // // completed++;
-  // // cout << "\r";
-  // flush(cout);
+  cout << endl;
 }
 // END: Printing the grid
 
@@ -365,7 +362,7 @@ void Sudoku::genPuzzle()
 // START: Printing into SVG file
 void Sudoku::printSVG(string path = "", int index = 0)
 {
-  string fileName = path + "svgHead.txt";
+  string fileName = "svgHead.txt";
   ifstream file1(fileName.c_str());
   stringstream svgHead;
   svgHead << file1.rdbuf();
@@ -482,11 +479,21 @@ void Sudoku::calculateDifficulty()
 // END: calculating difficulty level
 
 // START: The main function
-int main(int argc, char const *argv[])
+int main(int argc, char *argv[])
 {
 
-  cout << "hello";
-  for (int i = 0; i < 10; i++)
+  // cout << argv[1];
+  int size = atoi(argv[1]);
+  int difficulty = atoi(argv[2]);
+  bool includeSolutions = (bool)atoi(argv[3]);
+
+  // cout << "number of puzzles: " << size << endl;
+  // cout << "difficulty : " << difficulty << endl;
+  // cout << "solutions : " << includeSolutions << endl;
+
+  cout << argv;
+
+  for (int i = 0; i < size; i++)
   {
     // Initialising seed for random number generation
     srand(time(NULL) + i);
@@ -504,7 +511,7 @@ int main(int argc, char const *argv[])
     puzzle->calculateDifficulty();
 
     // testing by printing the grid
-    puzzle->printGrid();
+    // puzzle->printGrid();
 
     // Printing the grid into SVG file
 
@@ -512,10 +519,8 @@ int main(int argc, char const *argv[])
     string path = argv[0];
 
     path = path.substr(0, path.size() - rem.size());
-    // cout << path;
-    // puzzle->printSVG(path, i);
+    puzzle->printSVG(path, i);
 
-    cout << "----------------------------------------\n";
     // freeing the memory
     delete puzzle;
   }
