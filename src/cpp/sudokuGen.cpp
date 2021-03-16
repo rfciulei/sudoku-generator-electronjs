@@ -208,23 +208,23 @@ bool Sudoku::verifyGridStatus()
 // START: Printing the grid
 void Sudoku::printGrid()
 {
-  // for (int i = 0; i < 9; i++)
-  // {
-  //   for (int j = 0; j < 9; j++)
-  //   {
-  //     if (grid[i][j] == 0)
-  //       cout << ".";
-  //     else
-  //       cout << grid[i][j];
-  //     cout << "|";
-  //   }
-  //   cout << endl;
-  // }
+  for (int i = 0; i < 9; i++)
+  {
+    for (int j = 0; j < 9; j++)
+    {
+      if (grid[i][j] == 0)
+        cout << ".";
+      else
+        cout << grid[i][j];
+      cout << "|";
+    }
+    cout << endl;
+  }
 
-  cout << "Loading " << double(completed) / 10 << "%";
-  completed++;
-  cout << "\r";
-  flush(cout);
+  // // cout << "Loading " << double(completed) / 10 << "%";
+  // // completed++;
+  // // cout << "\r";
+  // flush(cout);
 }
 // END: Printing the grid
 
@@ -507,11 +507,15 @@ int main(int argc, char const *argv[])
     puzzle->printGrid();
 
     // Printing the grid into SVG file
+
     string rem = "sudokuGen";
     string path = argv[0];
-    path = path.substr(0, path.size() - rem.size());
-    puzzle->printSVG(path, i);
 
+    path = path.substr(0, path.size() - rem.size());
+    // cout << path;
+    // puzzle->printSVG(path, i);
+
+    cout << "----------------------------------------\n";
     // freeing the memory
     delete puzzle;
   }
