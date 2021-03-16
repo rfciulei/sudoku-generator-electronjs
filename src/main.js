@@ -26,74 +26,15 @@ function createWindow() {
     args = new Array();
     args.push(data.numberOfPuzzles);
     args.push(data.difficulty);
+    args.push(data.solutions);
 
-    if (data.solutions) {
-      args.push(1);
-    } else {
-      args.push(0);
-    }
+    let sudoku = require("sudoku");
+    let puzzle = sudoku.makepuzzle();
+    console.log(puzzle);
 
-    console.log("main.js args: " + args);
-
-    //build args for main.cpp
-    argsString = "";
-    for (let i = 0; i < args.length; i++) {
-      argsString += " ";
-      argsString += args[i];
-    }
-
-    let cppDirPath = path.join(__dirname, "cpp");
-    let exePath = path.join(__dirname, "..", "a.exe" + argsString);
-
-    // if (compile) {
-    //   //ISSUE : does not verify if g++ is present on the system
-    //   sourcePath = path.join(cppDirPath, "sudokuGen.cpp");
-
-    //   let compileCommand = "g++ " + sourcePath;
-    //   child_process.execSync(
-    //     compileCommand,
-    //     function callback(error, stdout, stderr) {
-    //       if (!error) {
-    //         console.log("[FINISHED] : compilation");
-    //       }
-    //       console.log(stdout);
-    //       console.error(stderr);
-    //     }
-    //   );
-
-    //   // const currentPath = path.join(__dirname, "a.exe");
-    //   // const destinationPath = path.join(__dirname, "cpp");
-    //   // console.log(currentPath);
-    //   // console.log(destinationPath);
-    //   // fs.rename(currentPath, destinationPath, function (err) {
-    //   //   if (err) {
-    //   //     throw err;
-    //   //   } else {
-    //   //     console.log("Successfully moved the file!");
-    //   //   }
-    //   // });
-    //   child_process.execSync(exePath, function callback(error, stdout, stderr) {
-    //     console.log(stdout);
-    //     if (!error) {
-    //       console.log("[FINISHED] : a.exe execution");
-    //       win.webContents.send("fromMain", "finished");
-    //     } else {
-    //       console.log(error);
-    //     }
-    //   });
-    // } else {
-    child_process.exec(exePath, function callback(error, stdout, stderr) {
-      if (!error) {
-        console.log("[FINISHED] : a.exe execution");
-        win.webContents.send("fromMain", "finished");
-      }
-      console.log(stdout);
-      console.error(stderr);
-    });
-    // }
+    console.log(data);
   });
 }
-
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
@@ -116,63 +57,63 @@ app.on("window-all-closed", function () {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
-const log = (string) => {
-  const months = [
-    "JAN",
-    "FEB",
-    "MAR",
-    "APR",
-    "MAY",
-    "JUN",
-    "JUL",
-    "AUG",
-    "SEP",
-    "OCT",
-    "NOV",
-    "DEC",
-  ];
+// const log = (string) => {
+//   const months = [
+//     "JAN",
+//     "FEB",
+//     "MAR",
+//     "APR",
+//     "MAY",
+//     "JUN",
+//     "JUL",
+//     "AUG",
+//     "SEP",
+//     "OCT",
+//     "NOV",
+//     "DEC",
+//   ];
 
-  let current_datetime = new Date();
-  let formatted_date =
-    current_datetime.getHours() + "h-" + current_datetime.getMinutes() + "m";
+//   let current_datetime = new Date();
+//   let formatted_date =
+//     current_datetime.getHours() + "h-" + current_datetime.getMinutes() + "m";
 
-  let logsFolder = path.join(__dirname, "logs");
-  console.log();
-  if (!fs.existsSync(logsFolder)) {
-    fs.mkdir(logsFolder, (err) => {
-      if (err) {
-        throw err;
-      }
-      console.log("dir was created");
-    });
-  }
+//   let logsFolder = path.join(__dirname, "logs");
+//   console.log();
+//   if (!fs.existsSync(logsFolder)) {
+//     fs.mkdir(logsFolder, (err) => {
+//       if (err) {
+//         throw err;
+//       }
+//       console.log("dir was created");
+//     });
+//   }
 
-  let fileName =
-    "logs_" +
-    current_datetime.getHours() +
-    "h-" +
-    current_datetime.getMinutes() +
-    "m";
-  let currentLogFile = path.join(logsFolder, fileName);
+//   let fileName =
+//     "logs_" +
+//     current_datetime.getHours() +
+//     "h-" +
+//     current_datetime.getMinutes() +
+//     "m";
+//   let currentLogFile = path.join(logsFolder, fileName);
 
-  formatted_date =
-    current_datetime.getHours() +
-    "h-" +
-    current_datetime.getMinutes() +
-    "m-" +
-    current_datetime.getSeconds() +
-    "s-" +
-    current_datetime.getMilliseconds() +
-    "ms";
+//   formatted_date =
+//     current_datetime.getHours() +
+//     "h-" +
+//     current_datetime.getMinutes() +
+//     "m-" +
+//     current_datetime.getSeconds() +
+//     "s-" +
+//     current_datetime.getMilliseconds() +
+//     "ms";
 
-  fs.writeFileSync(
-    currentLogFile,
-    formatted_date + " [LOG]: " + string,
-    function (err, data) {
-      if (err) {
-        return console.log(err);
-      }
-      console.log(data);
-    }
-  );
-};
+//   fs.writeFileSync(
+//     currentLogFile,
+//     formatted_date + " [LOG]: " + string,
+//     function (err, data) {
+//       if (err) {
+//         return console.log(err);
+//       }
+//       console.log(data);
+//     }
+//   );
+// };
