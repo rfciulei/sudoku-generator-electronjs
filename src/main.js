@@ -2,7 +2,7 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
 const fs = require("fs");
-const exec = require("child_process").exec;
+const child_process = require("child_process");
 
 function createWindow() {
   // Create the browser window.
@@ -19,15 +19,21 @@ function createWindow() {
   // no menu bar
   win.setMenuBarVisibility(false);
   // Open the DevTools.
-  win.webContents.openDevTools();
+  // win.webContents.openDevTools();
 
   ipcMain.on("toMain", (event, data) => {
     let compile = true;
     args = new Array();
-
     args.push(data.numberOfPuzzles);
     args.push(data.difficulty);
-    args.push(data.solutions);
+
+    if (data.solutions) {
+      args.push(1);
+    } else {
+      args.push(0);
+    }
+
+    console.log("main.js args: " + args);
 
     //build args for main.cpp
     argsString = "";
@@ -36,33 +42,55 @@ function createWindow() {
       argsString += args[i];
     }
 
-    //ISSUE : does not verify if g++ is present on the system
-    if (compile) {
-      exec(
-        "g++ sudokuGen.cpp " + argsString,
-        function callback(error, stdout, stderr) {
-          if (!error) {
-            exec("a.exe", function callback(error, stdout, stderr) {
-              if (!error) {
-                console.log("[FINISHED] : compilation");
-                win.webContents.send("fromMain", "finished");
-              }
-            });
-          }
-        }
-      );
-    } else {
-      cppDirPath = path.join(__dirname, "cpp");
-      exePath = path.join(cppDirPath, "a.exe" + argsString);
+    let cppDirPath = path.join(__dirname, "cpp");
+    let exePath = path.join(__dirname, "..", "a.exe" + argsString);
 
-      exec(exePath, function callback(error, stdout, stderr) {
-        console.log(stdout);
-        if (!error) {
-          console.log("[FINISHED] : a.exe execution");
-          win.webContents.send("fromMain", "finished");
-        }
-      });
-    }
+    // if (compile) {
+    //   //ISSUE : does not verify if g++ is present on the system
+    //   sourcePath = path.join(cppDirPath, "sudokuGen.cpp");
+
+    //   let compileCommand = "g++ " + sourcePath;
+    //   child_process.execSync(
+    //     compileCommand,
+    //     function callback(error, stdout, stderr) {
+    //       if (!error) {
+    //         console.log("[FINISHED] : compilation");
+    //       }
+    //       console.log(stdout);
+    //       console.error(stderr);
+    //     }
+    //   );
+
+    //   // const currentPath = path.join(__dirname, "a.exe");
+    //   // const destinationPath = path.join(__dirname, "cpp");
+    //   // console.log(currentPath);
+    //   // console.log(destinationPath);
+    //   // fs.rename(currentPath, destinationPath, function (err) {
+    //   //   if (err) {
+    //   //     throw err;
+    //   //   } else {
+    //   //     console.log("Successfully moved the file!");
+    //   //   }
+    //   // });
+    //   child_process.execSync(exePath, function callback(error, stdout, stderr) {
+    //     console.log(stdout);
+    //     if (!error) {
+    //       console.log("[FINISHED] : a.exe execution");
+    //       win.webContents.send("fromMain", "finished");
+    //     } else {
+    //       console.log(error);
+    //     }
+    //   });
+    // } else {
+    child_process.exec(exePath, function callback(error, stdout, stderr) {
+      if (!error) {
+        console.log("[FINISHED] : a.exe execution");
+        win.webContents.send("fromMain", "finished");
+      }
+      console.log(stdout);
+      console.error(stderr);
+    });
+    // }
   });
 }
 
