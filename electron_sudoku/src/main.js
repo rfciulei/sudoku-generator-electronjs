@@ -2,7 +2,7 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
 const fs = require("fs");
-var exec = require("child_process").exec;
+const exec = require("child_process").exec;
 
 function createWindow() {
   // Create the browser window.
@@ -36,6 +36,7 @@ function createWindow() {
       argsString += args[i];
     }
 
+    //ISSUE : does not verify if g++ is present on the system
     if (compile) {
       exec(
         "g++ sudokuGen.cpp " + argsString,
@@ -88,10 +89,29 @@ app.on("window-all-closed", function () {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
 const log = (string) => {
-  const dir = "./logs";
+  const months = [
+    "JAN",
+    "FEB",
+    "MAR",
+    "APR",
+    "MAY",
+    "JUN",
+    "JUL",
+    "AUG",
+    "SEP",
+    "OCT",
+    "NOV",
+    "DEC",
+  ];
 
-  if (!fs.existsSync(dir)) {
-    fs.mkdir(dir, (err) => {
+  let current_datetime = new Date();
+  let formatted_date =
+    current_datetime.getHours() + "h-" + current_datetime.getMinutes() + "m";
+
+  let logsFolder = path.join(__dirname, "logs");
+  console.log();
+  if (!fs.existsSync(logsFolder)) {
+    fs.mkdir(logsFolder, (err) => {
       if (err) {
         throw err;
       }
@@ -99,10 +119,32 @@ const log = (string) => {
     });
   }
 
-  fs.writeFile("/logs/" + new Date(), "[LOG]" + string, function (err, data) {
-    if (err) {
-      return console.log(err);
+  let fileName =
+    "logs_" +
+    current_datetime.getHours() +
+    "h-" +
+    current_datetime.getMinutes() +
+    "m";
+  let currentLogFile = path.join(logsFolder, fileName);
+
+  formatted_date =
+    current_datetime.getHours() +
+    "h-" +
+    current_datetime.getMinutes() +
+    "m-" +
+    current_datetime.getSeconds() +
+    "s-" +
+    current_datetime.getMilliseconds() +
+    "ms";
+
+  fs.writeFileSync(
+    currentLogFile,
+    formatted_date + " [LOG]: " + string,
+    function (err, data) {
+      if (err) {
+        return console.log(err);
+      }
+      console.log(data);
     }
-    console.log(data);
-  });
+  );
 };
