@@ -5,12 +5,14 @@
 // selectively enable features needed in the rendering
 // process.
 
-//TO-DO : hide loader when finished
 window.api.receive("fromMain", (data) => {
   // console.log("Received " + JSON.stringify(data));
-  if (data === "finished") {
+  if (data === "finished_success") {
     document.getElementById("btnGo").disabled = false;
-    console.log("[FINISHED] : a.exe ");
+    console.log("[FINISHED] : a.exe execution with code SUCCESS ");
+  } else {
+    document.getElementById("btnGo").disabled = false;
+    console.log("[FINISHED] : a.exe execution with code FAIL");
   }
   document.getElementById("loaderRoot").innerHTML = "";
 });

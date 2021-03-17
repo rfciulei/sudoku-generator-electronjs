@@ -481,17 +481,18 @@ void Sudoku::calculateDifficulty()
 // START: The main function
 int main(int argc, char *argv[])
 {
-
-  // cout << argv[1];
+  // ISSUE args not parsed ok
   int size = atoi(argv[1]);
   int difficulty = atoi(argv[2]);
-  bool includeSolutions = (bool)atoi(argv[3]);
+  bool includeSolutions;
+  if (atoi(argv[3]) == 0)
+    includeSolutions = false;
+  else
+    includeSolutions = true;
 
-  // cout << "number of puzzles: " << size << endl;
-  // cout << "difficulty : " << difficulty << endl;
-  // cout << "solutions : " << includeSolutions << endl;
-
-  cout << argv;
+  cout << "size : " << size << endl;
+  cout << "difficulty : " << difficulty << endl;
+  cout << "includeSolutions : " << includeSolutions << endl;
 
   for (int i = 0; i < size; i++)
   {
@@ -511,15 +512,15 @@ int main(int argc, char *argv[])
     puzzle->calculateDifficulty();
 
     // testing by printing the grid
-    // puzzle->printGrid();
+    puzzle->printGrid();
 
     // Printing the grid into SVG file
 
-    string rem = "sudokuGen";
-    string path = argv[0];
+    // string rem = "sudokuGen";
+    // string path = argv[0];
 
-    path = path.substr(0, path.size() - rem.size());
-    puzzle->printSVG(path, i);
+    // path = path.substr(0, path.size() - rem.size());
+    // puzzle->printSVG(path, i);
 
     // freeing the memory
     delete puzzle;
@@ -527,4 +528,3 @@ int main(int argc, char *argv[])
 
   return 0;
 }
-// END: The main function

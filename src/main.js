@@ -2,7 +2,14 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
 const fs = require("fs");
-const exec = require("child_process").exec;
+const child_process = require("child_process");
+const spawn = require("child_process").spawn;
+
+let cppDirPath = path.join(__dirname, "cpp");
+let execPath = path.join(cppDirPath, "a.exe");
+
+let devEnv = false;
+let compile = true;
 
 function createWindow() {
   // Create the browser window.
@@ -19,52 +26,99 @@ function createWindow() {
   // no menu bar
   win.setMenuBarVisibility(false);
   // Open the DevTools.
-  win.webContents.openDevTools();
+  if (devEnv == true) win.webContents.openDevTools();
 
   ipcMain.on("toMain", (event, data) => {
-    let compile = true;
     args = new Array();
-
     args.push(data.numberOfPuzzles);
     args.push(data.difficulty);
-    args.push(data.solutions);
+    // args.push(data.solutions);
 
-    //build args for main.cpp
-    argsString = "";
-    for (let i = 0; i < args.length; i++) {
-      argsString += " ";
-      argsString += args[i];
+    if (data.solutions) {
+      args.push("1");
+    } else {
+      args.push("0");
     }
+    console.log(args);
 
+    // src/cpp/puzzles dir should be empty for each a.exe execution
+    createAndEmptyPuzzlesDir();
     //ISSUE : does not verify if g++ is present on the system
     if (compile) {
-      exec(
-        "g++ sudokuGen.cpp " + argsString,
-        function callback(error, stdout, stderr) {
-          if (!error) {
-            exec("a.exe", function callback(error, stdout, stderr) {
-              if (!error) {
-                console.log("[FINISHED] : compilation");
-                win.webContents.send("fromMain", "finished");
-              }
-            });
-          }
-        }
-      );
+      compileCode(win);
+      executeCpp(win);
     } else {
-      cppDirPath = path.join(__dirname, "cpp");
-      exePath = path.join(cppDirPath, "a.exe" + argsString);
-
-      exec(exePath, function callback(error, stdout, stderr) {
-        console.log(stdout);
-        if (!error) {
-          console.log("[FINISHED] : a.exe execution");
-          win.webContents.send("fromMain", "finished");
-        }
-      });
+      executeCpp(win);
     }
   });
 }
+// ISSUE -> does not show output
+const compileCode = (win) => {
+  let c =
+    "g++ " +
+    path.join(cppDirPath, "sudokuGen.cpp") +
+    " -o " +
+    path.join(cppDirPath, "a");
+  // we use execSync so that we make sure the compilation
+  // is finished before execution
+  child_process.execSync(c, (error, stdout, stderr) => {
+    if (error) {
+      console.log(`error: ${error.message}`);
+      return;
+    }
+    if (stderr) {
+      console.log(`stderr: ${stderr}`);
+      return;
+    }
+    if (stdout) {
+      console.log("[FINISHED][SUCCESS] : compilation");
+    }
+    // console.log(`g++ stdout:\n${stdout}`);
+  });
+};
+// TO-DO : fix error codes passing
+const executeCpp = (win) => {
+  exec = spawn(execPath, args);
+  exec.stdout.on("data", function (data) {
+    console.log("a.exe stdout:\n" + data.toString());
+  });
+  exec.stderr.on("data", function (data) {
+    console.log("stderr: " + data.toString());
+  });
+  exec.on("exit", function (code) {
+    if (code.toString() === "0") {
+      console.log("[FINISHED][SUCCESS] : a.exe execution");
+      win.webContents.send("fromMain", "finished");
+    } else {
+      console.log("[FINISHED][FAIL] : a.exe execution");
+      win.webContents.send("fromMain", "finished");
+    }
+  });
+};
+
+const createAndEmptyPuzzlesDir = () => {
+  let directory = path.join(__dirname, "cpp", "puzzles");
+
+  if (fs.existsSync(directory)) {
+    fs.readdir(directory, (err, files) => {
+      if (err) throw err;
+
+      for (const file of files) {
+        if (file.fileName !== "DONT_DELETE") {
+          fs.unlink(path.join(directory, file), (err) => {
+            if (err) throw err;
+          });
+        }
+      }
+    });
+  } else {
+    fs.mkdir(directory, (err) => {
+      if (err) {
+        throw err;
+      }
+    });
+  }
+};
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
