@@ -484,44 +484,47 @@ int main(int argc, char *argv[])
   // ISSUE args not parsed ok
   int size = atoi(argv[1]);
   int difficulty = atoi(argv[2]);
-  bool includeSolutions = (bool)atoi(argv[3]);
+  bool includeSolutions;
+  if (atoi(argv[3]) == 0)
+    includeSolutions = false;
+  else
+    includeSolutions = true;
 
-  cout << "argv[1] : " << argv[1] << endl;
-  cout << "argv[2] : " << argv[2] << endl;
-  cout << "argv[3] : " << argv[3] << endl;
+  cout << "size : " << size << endl;
+  cout << "difficulty : " << difficulty << endl;
+  cout << "includeSolutions : " << includeSolutions << endl;
 
-  // for (int i = 0; i < size; i++)
-  // {
-  //   // Initialising seed for random number generation
-  //   srand(time(NULL) + i);
+  for (int i = 0; i < size; i++)
+  {
+    // Initialising seed for random number generation
+    srand(time(NULL) + i);
 
-  //   // Creating an instance of Sudoku
-  //   Sudoku *puzzle = new Sudoku();
+    // Creating an instance of Sudoku
+    Sudoku *puzzle = new Sudoku();
 
-  //   // Creating a seed for puzzle generation
-  //   puzzle->createSeed();
+    // Creating a seed for puzzle generation
+    puzzle->createSeed();
 
-  //   // Generating the puzzle
-  //   puzzle->genPuzzle();
+    // Generating the puzzle
+    puzzle->genPuzzle();
 
-  //   // Calculating difficulty of puzzle
-  //   puzzle->calculateDifficulty();
+    // Calculating difficulty of puzzle
+    puzzle->calculateDifficulty();
 
-  //   // testing by printing the grid
-  //   // puzzle->printGrid();
+    // testing by printing the grid
+    puzzle->printGrid();
 
-  //   // Printing the grid into SVG file
+    // Printing the grid into SVG file
 
-  //   string rem = "sudokuGen";
-  //   string path = argv[0];
+    // string rem = "sudokuGen";
+    // string path = argv[0];
 
-  //   path = path.substr(0, path.size() - rem.size());
-  //   puzzle->printSVG(path, i);
+    // path = path.substr(0, path.size() - rem.size());
+    // puzzle->printSVG(path, i);
 
-  //   // freeing the memory
-  //   delete puzzle;
-  // }
+    // freeing the memory
+    delete puzzle;
+  }
 
   return 0;
 }
-// END: The main function

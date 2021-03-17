@@ -32,8 +32,17 @@ function createWindow() {
     args = new Array();
     args.push(data.numberOfPuzzles);
     args.push(data.difficulty);
-    args.push(data.solutions);
+    // args.push(data.solutions);
 
+    if (data.solutions) {
+      args.push("1");
+    } else {
+      args.push("0");
+    }
+    console.log(args);
+
+    // src/cpp/puzzles dir should be empty for each a.exe execution
+    createAndEmptyPuzzlesDir();
     //ISSUE : does not verify if g++ is present on the system
     if (compile) {
       compileCode(win);
@@ -43,17 +52,15 @@ function createWindow() {
     }
   });
 }
-
+// ISSUE -> does not show output
 const compileCode = (win) => {
-  console.log(path.join(cppDirPath, "sudokuGen.cpp"));
-  // works
   let c =
     "g++ " +
     path.join(cppDirPath, "sudokuGen.cpp") +
     " -o " +
     path.join(cppDirPath, "a");
   // we use execSync so that we make sure the compilation
-  // is finished before executio
+  // is finished before execution
   child_process.execSync(c, (error, stdout, stderr) => {
     if (error) {
       console.log(`error: ${error.message}`);
@@ -62,11 +69,11 @@ const compileCode = (win) => {
     if (stderr) {
       console.log(`stderr: ${stderr}`);
       return;
-    } else {
-      // TO-DO: fix console.log(finished)
+    }
+    if (stdout) {
       console.log("[FINISHED][SUCCESS] : compilation");
     }
-    console.log(`g++ stdout:\n${stdout}`);
+    // console.log(`g++ stdout:\n${stdout}`);
   });
 };
 // TO-DO : fix error codes passing
@@ -87,6 +94,30 @@ const executeCpp = (win) => {
       win.webContents.send("fromMain", "finished");
     }
   });
+};
+
+const createAndEmptyPuzzlesDir = () => {
+  let directory = path.join(__dirname, "cpp", "puzzles");
+
+  if (fs.existsSync(directory)) {
+    fs.readdir(directory, (err, files) => {
+      if (err) throw err;
+
+      for (const file of files) {
+        if (file.fileName !== "DONT_DELETE") {
+          fs.unlink(path.join(directory, file), (err) => {
+            if (err) throw err;
+          });
+        }
+      }
+    });
+  } else {
+    fs.mkdir(directory, (err) => {
+      if (err) {
+        throw err;
+      }
+    });
+  }
 };
 
 // This method will be called when Electron has finished
