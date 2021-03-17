@@ -8,13 +8,8 @@ const spawn = require("child_process").spawn;
 let cppDirPath = path.join(__dirname, "cpp");
 let execPath = path.join(cppDirPath, "a.exe");
 
-let compileCommand =
-  "g++ " +
-  path.join(cppDirPath, "sudokuGen.cpp") +
-  " -o " +
-  path.join(cppDirPath, "a.exe");
-
-let execCommand = "";
+let devEnv = false;
+let compile = true;
 
 function createWindow() {
   // Create the browser window.
@@ -31,63 +26,66 @@ function createWindow() {
   // no menu bar
   win.setMenuBarVisibility(false);
   // Open the DevTools.
-  win.webContents.openDevTools();
+  if (devEnv == true) win.webContents.openDevTools();
 
   ipcMain.on("toMain", (event, data) => {
-    let compile = false;
     args = new Array();
-
     args.push(data.numberOfPuzzles);
     args.push(data.difficulty);
     args.push(data.solutions);
 
-    //build args for main.cpp
-    argsString = "";
-    for (let i = 0; i < args.length; i++) {
-      argsString += " ";
-      argsString += args[i];
-    }
-    execCommand = execPath + " " + argsString;
-
-    console.log(compileCommand);
-    console.log(execCommand);
-
     //ISSUE : does not verify if g++ is present on the system
     if (compile) {
       compileCode(win);
-      console.log("[FINISHED] : a.exe compilation");
       executeCpp(win);
-      console.log("[FINISHED] : a.exe execution");
     } else {
       executeCpp(win);
     }
   });
 }
 
+const compileCode = (win) => {
+  console.log(path.join(cppDirPath, "sudokuGen.cpp"));
+  // works
+  let c =
+    "g++ " +
+    path.join(cppDirPath, "sudokuGen.cpp") +
+    " -o " +
+    path.join(cppDirPath, "a");
+  // we use execSync so that we make sure the compilation
+  // is finished before executio
+  child_process.execSync(c, (error, stdout, stderr) => {
+    if (error) {
+      console.log(`error: ${error.message}`);
+      return;
+    }
+    if (stderr) {
+      console.log(`stderr: ${stderr}`);
+      return;
+    } else {
+      // TO-DO: fix console.log(finished)
+      console.log("[FINISHED][SUCCESS] : compilation");
+    }
+    console.log(`g++ stdout:\n${stdout}`);
+  });
+};
+// TO-DO : fix error codes passing
 const executeCpp = (win) => {
-  exec = spawn(execPath, [argsString]);
+  exec = spawn(execPath, args);
   exec.stdout.on("data", function (data) {
-    console.log("stdout: " + data.toString());
+    console.log("a.exe stdout:\n" + data.toString());
   });
   exec.stderr.on("data", function (data) {
     console.log("stderr: " + data.toString());
   });
   exec.on("exit", function (code) {
-    console.log("child process exited with code " + code.toString());
-    win.webContents.send("fromMain", "finished");
-  });
-};
-
-const compileCode = (win) => {
-  comp = spawn(compileCommand, []);
-  comp.stdout.on("data", function (data) {
-    console.log("stdout: " + data.toString());
-  });
-  comp.stderr.on("data", function (data) {
-    console.log("stderr: " + data.toString());
-  });
-  comp.on("exit", function (code) {
-    console.log("child process exited with code " + code.toString());
+    if (code.toString() === "0") {
+      console.log("[FINISHED][SUCCESS] : a.exe execution");
+      win.webContents.send("fromMain", "finished");
+    } else {
+      console.log("[FINISHED][FAIL] : a.exe execution");
+      win.webContents.send("fromMain", "finished");
+    }
   });
 };
 

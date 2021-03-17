@@ -481,13 +481,14 @@ void Sudoku::calculateDifficulty()
 // START: The main function
 int main(int argc, char *argv[])
 {
-
+  // ISSUE args not parsed ok
   int size = atoi(argv[1]);
   int difficulty = atoi(argv[2]);
   bool includeSolutions = (bool)atoi(argv[3]);
 
-  cout << argv;
-  cout << "SOMETHING PLS ";
+  cout << "argv[1] : " << argv[1] << endl;
+  cout << "argv[2] : " << argv[2] << endl;
+  cout << "argv[3] : " << argv[3] << endl;
 
   // for (int i = 0; i < size; i++)
   // {
