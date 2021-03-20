@@ -8,9 +8,15 @@ const path = require("path");
 const buildPdf = (perPage) => {
   console.log(perPage);
   let puzzlesDir = path.join(__dirname, "cpp", "puzzles");
+  let pdfsDir = path.join(__dirname, "pdfs");
+
+  if (!fs.existsSync(pdfsDir)) {
+    fs.mkdirSync(pdfsDir);
+  }
+
+  const files = fs.readdirSync(puzzlesDir);
   let doc = new PDFDocument();
   let stream = fs.createWriteStream(path.join(__dirname, "pdfs/sudoku.pdf"));
-  const files = fs.readdirSync(puzzlesDir);
 
   files.forEach((file) => {
     filename = path.join(puzzlesDir, file);
@@ -25,11 +31,11 @@ const buildPdf = (perPage) => {
     } else if (perPage == 4) {
       if ((`puzzle(\d+).svg`, file)) {
         if ((files.indexOf(file) + 1) % 4 == 0) {
-          SVGtoPDF(doc, svg, 25, 121);
+          SVGtoPDF(doc, svg, 325, 121);
           // console.log("up-left");
         }
         if ((files.indexOf(file) + 1) % 4 == 1) {
-          SVGtoPDF(doc, svg, 325, 121);
+          SVGtoPDF(doc, svg, 25, 121);
           // console.log("up-right");
         }
         if ((files.indexOf(file) + 1) % 4 == 2) {
