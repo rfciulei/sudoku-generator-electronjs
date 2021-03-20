@@ -488,10 +488,6 @@ int main(int argc, char *argv[])
   else
     includeSolutions = true;
 
-  cout << "size : " << size << endl;
-  cout << "difficulty : " << difficulty << endl;
-  cout << "includeSolutions : " << includeSolutions << endl;
-
   for (int i = 0; i < size; i++)
   {
     // Initialising seed for random number generation
@@ -513,12 +509,7 @@ int main(int argc, char *argv[])
     puzzle->printGrid();
 
     // Printing the grid into SVG file
-
-    // string rem = "sudokuGen";
-    // string path = argv[0];
-
-    // path = path.substr(0, path.size() - rem.size());
-    // puzzle->printSVG(path, i);
+    puzzle->printSVG("", i);
 
     // freeing the memory
     delete puzzle;

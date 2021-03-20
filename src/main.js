@@ -4,11 +4,14 @@ const path = require("path");
 const fs = require("fs");
 const child_process = require("child_process");
 const spawn = require("child_process").spawn;
+const buildPdf = require("./buildPdf");
 
 let cppDirPath = path.join(__dirname, "cpp");
 let execPath = path.join(cppDirPath, "sudokuGen.exe");
 
+//these should've been in an env.js file
 let devEnv = false;
+// TO-DO -> link dll's to exe file before release
 let compile = true;
 
 function createWindow() {
@@ -33,23 +36,19 @@ function createWindow() {
     args = new Array();
     args.push(data.numberOfPuzzles);
     args.push(data.difficulty);
-    // args.push(data.solutions);
-
     if (data.solutions) {
       args.push("1");
     } else {
       args.push("0");
     }
-    console.log(args);
-
     // src/cpp/puzzles dir should be empty for each sudokuGen.exe execution
-    createAndEmptyPuzzlesDir();
+    createOrEmptyPuzzlesDirSync();
     //ISSUE : does not verify if g++ is present on the system
     if (compile) {
       compileCode(win);
-      executeCpp(win);
+      executeCpp(win, args);
     } else {
-      executeCpp(win);
+      executeCpp(win, args);
     }
   });
 }
@@ -59,7 +58,7 @@ const compileCode = (win) => {
     "g++ " +
     path.join(cppDirPath, "sudokuGen.cpp") +
     " -o " +
-    path.join(cppDirPath, "a");
+    path.join(cppDirPath, "sudokuGen");
   // we use execSync so that we make sure the compilation
   // is finished before execution
   child_process.execSync(c, (error, stdout, stderr) => {
@@ -78,8 +77,12 @@ const compileCode = (win) => {
   });
 };
 // TO-DO : fix error codes passing
-const executeCpp = (win) => {
-  exec = spawn(execPath, args);
+const executeCpp = (win, args) => {
+  const opts = {
+    cwd: path.join(__dirname, "cpp"),
+    env: process.env,
+  };
+  exec = spawn(execPath, args, opts);
   exec.stdout.on("data", function (data) {
     console.log("sudokuGen.exe stdout:\n" + data.toString());
   });
@@ -90,6 +93,8 @@ const executeCpp = (win) => {
     if (code.toString() === "0") {
       console.log("[FINISHED][SUCCESS] : sudokuGen.exe execution");
       win.webContents.send("fromMain", "finished");
+      // will build pdf if code return 0
+      buildPdf();
     } else {
       console.log("[FINISHED][FAIL] : sudokuGen.exe execution");
       win.webContents.send("fromMain", "finished");
@@ -97,28 +102,17 @@ const executeCpp = (win) => {
   });
 };
 
-const createAndEmptyPuzzlesDir = () => {
+//ISSUE
+const createOrEmptyPuzzlesDirSync = () => {
   let directory = path.join(__dirname, "cpp", "puzzles");
 
   if (fs.existsSync(directory)) {
-    fs.readdir(directory, (err, files) => {
-      if (err) throw err;
+    const files = fs.readdirSync(directory);
 
-      for (const file of files) {
-        if (file.fileName !== "DONT_DELETE") {
-          fs.unlink(path.join(directory, file), (err) => {
-            if (err) throw err;
-          });
-        }
-      }
-    });
-  } else {
-    fs.mkdir(directory, (err) => {
-      if (err) {
-        throw err;
-      }
-    });
-  }
+    for (const file of files) {
+      fs.unlinkSync(path.join(directory, file));
+    }
+  } else fs.mkdirSync(directory);
 };
 
 // This method will be called when Electron has finished
