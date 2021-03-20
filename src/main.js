@@ -72,9 +72,8 @@ const compileCode = (win) => {
       return;
     }
     if (stdout) {
-      console.log("[FINISHED][SUCCESS] : compilation");
+      console.log(`g++ stdout:\n${stdout}`);
     }
-    // console.log(`g++ stdout:\n${stdout}`);
   });
 };
 // TO-DO : fix error codes passing
