@@ -1,27 +1,52 @@
 let fs = require("fs");
 let PDFDocument = require("pdfkit");
 let SVGtoPDF = require("svg-to-pdfkit");
+const { scale } = require("scale-that-svg");
 const path = require("path");
 
-let perPage = 2; //or 4
-
 //takes all svgs from puzzles directory and merges into sudoku.pdf
-const buildPdf = () => {
+const buildPdf = (perPage) => {
+  console.log(perPage);
   let puzzlesDir = path.join(__dirname, "cpp", "puzzles");
   let doc = new PDFDocument();
   let stream = fs.createWriteStream(path.join(__dirname, "pdfs/sudoku.pdf"));
   const files = fs.readdirSync(puzzlesDir);
 
   files.forEach((file) => {
-    if ((`puzzle(\d+).svg`, file)) {
-      filename = path.join(puzzlesDir, file);
-      const svg = fs.readFileSync(filename, "utf8");
+    filename = path.join(puzzlesDir, file);
+    const svg = fs.readFileSync(filename, "utf8");
 
-      //TO-DO 2 or 4 per page functionality
-      //write to pdf
-      SVGtoPDF(doc, svg, 20, 0);
+    if (perPage == 1) {
+      if ((`puzzle(\d+).svg`, file)) {
+        SVGtoPDF(doc, svg, 20, 40);
 
-      if (files.indexOf(file) != files.length - 1) doc.addPage();
+        if (files.indexOf(file) != files.length - 1) doc.addPage();
+      }
+    } else if (perPage == 4) {
+      if ((`puzzle(\d+).svg`, file)) {
+        if ((files.indexOf(file) + 1) % 4 == 0) {
+          SVGtoPDF(doc, svg, 25, 121);
+          // console.log("up-left");
+        }
+        if ((files.indexOf(file) + 1) % 4 == 1) {
+          SVGtoPDF(doc, svg, 325, 121);
+          // console.log("up-right");
+        }
+        if ((files.indexOf(file) + 1) % 4 == 2) {
+          SVGtoPDF(doc, svg, 25, 121 + 300);
+          // console.log("down-left");
+        }
+        if ((files.indexOf(file) + 1) % 4 == 3) {
+          SVGtoPDF(doc, svg, 325, 121 + 300);
+          // console.log("down-right");
+        }
+
+        if (
+          files.indexOf(file) != files.length - 1 &&
+          (files.indexOf(file) + 1) % 4 == 0
+        )
+          doc.addPage();
+      }
     }
   });
 

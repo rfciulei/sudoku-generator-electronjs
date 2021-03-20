@@ -1,0 +1,25 @@
+<svg version="1.1"
+     baseProfile="full"
+     width="500" height="600"
+     xmlns="http://www.w3.org/2000/svg" style="padding:10px;margin:10px">
+  <!-- Perimiter -->
+  <polyline points="0,0 350,0 350,350 0,350 0,0" style="fill:none;stroke:black;stroke-width:5" />
+   <!-- HORIZONTAL -->
+  <polyline points="0,38.8 350,38.8" style="fill:none; stroke:black ; stroke-width:1" />
+  <polyline points="0,77.6 350,77.6" style="fill:none; stroke:black ; stroke-width:1" />
+  <polyline points="0,116.6 350,116.6" style="fill:none; stroke:black ; stroke-width:5" />
+  <polyline points="0,155.4 350,155.4" style="fill:none; stroke:black ; stroke-width:1" />
+  <polyline points="0,194.2 350,194.2" style="fill:none; stroke:black ; stroke-width:1" />
+  <polyline points="0,233.2 350,233.2" style="fill:none; stroke:black ; stroke-width:5" />
+  <polyline points="0,233.3 350,233.3" style="fill:none; stroke:black ; stroke-width:1" />
+  <polyline points="0,271.8 350,271.8" style="fill:none; stroke:black ; stroke-width:1" />
+  <polyline points="0,310.6 350,310.6" style="fill:none; stroke:black ; stroke-width:1" />
+  <!-- VERTICAL -->
+  <polyline points="38.8,0 38.8,350" style="fill:none; stroke:black ; stroke-width:1" />
+  <polyline points="77.6,0 77.6,350" style="fill:none; stroke:black ; stroke-width:1" />
+  <polyline points="116.6,0 116.6,350" style="fill:none; stroke:black ; stroke-width:5" />
+  <polyline points="155.4,0 155.4,350" style="fill:none; stroke:black ; stroke-width:1" />
+  <polyline points="194.2,0 194.2,350" style="fill:none; stroke:black ; stroke-width:1" />
+  <polyline points="233.2,0 233.2,350" style="fill:none; stroke:black ; stroke-width:5" />
+  <polyline points="271.8,0 271.8,350" style="fill:none; stroke:black ; stroke-width:1" />
+  <polyline points="310.6,0 310.6,350" style="fill:none; stroke:black ; stroke-width:1" /> 

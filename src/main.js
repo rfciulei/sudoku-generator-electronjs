@@ -36,6 +36,7 @@ function createWindow() {
     args = new Array();
     args.push(data.numberOfPuzzles);
     args.push(data.difficulty);
+    args.push(data.perPage);
     if (data.solutions) {
       args.push("1");
     } else {
@@ -46,9 +47,9 @@ function createWindow() {
     //ISSUE : does not verify if g++ is present on the system
     if (compile) {
       compileCode(win);
-      executeCpp(win, args);
+      executeCpp(win, args, data);
     } else {
-      executeCpp(win, args);
+      executeCpp(win, args, data);
     }
   });
 }
@@ -77,7 +78,7 @@ const compileCode = (win) => {
   });
 };
 // TO-DO : fix error codes passing
-const executeCpp = (win, args) => {
+const executeCpp = (win, args, data) => {
   const opts = {
     cwd: path.join(__dirname, "cpp"),
     env: process.env,
@@ -94,7 +95,7 @@ const executeCpp = (win, args) => {
       console.log("[FINISHED][SUCCESS] : sudokuGen.exe execution");
       win.webContents.send("fromMain", "finished");
       // will build pdf if code return 0
-      buildPdf();
+      buildPdf(data.perPage);
     } else {
       console.log("[FINISHED][FAIL] : sudokuGen.exe execution");
       win.webContents.send("fromMain", "finished");

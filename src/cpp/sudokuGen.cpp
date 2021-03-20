@@ -32,7 +32,7 @@ public:
   void countSoln(int &number);
   void genPuzzle();
   bool verifyGridStatus();
-  void printSVG(string, int);
+  void printSVG(string, int, int);
   void calculateDifficulty();
   int branchDifficultyScore();
 };
@@ -358,9 +358,13 @@ void Sudoku::genPuzzle()
 // END: Generate puzzle
 
 // START: Printing into SVG file
-void Sudoku::printSVG(string path = "", int index = 0)
+void Sudoku::printSVG(string path = "", int index = 0, int perPage = 1)
 {
-  string fileName = "svgHead.txt";
+  string fileName;
+  if (perPage == 4)
+    fileName = "svgHead_4_per_page.txt";
+  else if (perPage == 1)
+    fileName = "svgHead_1_per_page.txt";
   ifstream file1(fileName.c_str());
   stringstream svgHead;
   svgHead << file1.rdbuf();
@@ -374,13 +378,26 @@ void Sudoku::printSVG(string path = "", int index = 0)
     {
       if (this->grid[i][j] != 0)
       {
-        int x = 50 * j + 16;
-        int y = 50 * i + 35;
+        if (perPage == 1)
+        {
+          int x = 50 * j + 16;
+          int y = 50 * i + 35;
 
-        stringstream text;
-        text << "<text x=\"" << x << "\" y=\"" << y << "\" style=\"font-weight:bold\" font-size=\"30px\">" << this->grid[i][j] << "</text>\n";
+          stringstream text;
+          text << "<text x=\"" << x << "\" y=\"" << y << "\" style=\"font-weight:bold\" font-size=\"30px\">" << this->grid[i][j] << "</text>\n";
 
-        outFile << text.rdbuf();
+          outFile << text.rdbuf();
+        }
+        if (perPage == 4)
+        {
+          float xf = 38.8885 * (float)j + 12.44432;
+          float yf = 38.8885 * (float)i + 27.22195;
+
+          stringstream text;
+          text << "<text x=\"" << xf << "\" y=\"" << yf << "\" style=\"font-weight:bold\" font-size=\"23.3331px\">" << this->grid[i][j] << "</text>\n";
+
+          outFile << text.rdbuf();
+        }
       }
     }
   }
@@ -482,8 +499,9 @@ int main(int argc, char *argv[])
   // ISSUE args not parsed ok
   int size = atoi(argv[1]);
   int difficulty = atoi(argv[2]);
+  int perPage = atoi(argv[3]);
   bool includeSolutions;
-  if (atoi(argv[3]) == 0)
+  if (atoi(argv[4]) == 0)
     includeSolutions = false;
   else
     includeSolutions = true;
@@ -509,7 +527,7 @@ int main(int argc, char *argv[])
     puzzle->printGrid();
 
     // Printing the grid into SVG file
-    puzzle->printSVG("", i);
+    puzzle->printSVG("", i, perPage);
 
     // freeing the memory
     delete puzzle;
