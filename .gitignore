@@ -1,5 +1,7 @@
 node_modules
 logs/
 out/
+*.pdf
 *.rar
 *.exe
+puzzles/
