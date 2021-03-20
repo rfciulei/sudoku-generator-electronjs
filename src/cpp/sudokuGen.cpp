@@ -12,8 +12,6 @@
 
 using namespace std;
 
-static int completed = 0;
-
 class Sudoku
 {
 private:

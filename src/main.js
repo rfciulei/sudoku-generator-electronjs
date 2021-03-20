@@ -6,7 +6,7 @@ const child_process = require("child_process");
 const spawn = require("child_process").spawn;
 
 let cppDirPath = path.join(__dirname, "cpp");
-let execPath = path.join(cppDirPath, "a.exe");
+let execPath = path.join(cppDirPath, "sudokuGen.exe");
 
 let devEnv = false;
 let compile = true;
@@ -42,7 +42,7 @@ function createWindow() {
     }
     console.log(args);
 
-    // src/cpp/puzzles dir should be empty for each a.exe execution
+    // src/cpp/puzzles dir should be empty for each sudokuGen.exe execution
     createAndEmptyPuzzlesDir();
     //ISSUE : does not verify if g++ is present on the system
     if (compile) {
@@ -81,17 +81,17 @@ const compileCode = (win) => {
 const executeCpp = (win) => {
   exec = spawn(execPath, args);
   exec.stdout.on("data", function (data) {
-    console.log("a.exe stdout:\n" + data.toString());
+    console.log("sudokuGen.exe stdout:\n" + data.toString());
   });
   exec.stderr.on("data", function (data) {
     console.log("stderr: " + data.toString());
   });
   exec.on("exit", function (code) {
     if (code.toString() === "0") {
-      console.log("[FINISHED][SUCCESS] : a.exe execution");
+      console.log("[FINISHED][SUCCESS] : sudokuGen.exe execution");
       win.webContents.send("fromMain", "finished");
     } else {
-      console.log("[FINISHED][FAIL] : a.exe execution");
+      console.log("[FINISHED][FAIL] : sudokuGen.exe execution");
       win.webContents.send("fromMain", "finished");
     }
   });
