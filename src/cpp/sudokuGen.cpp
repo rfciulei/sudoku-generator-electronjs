@@ -380,12 +380,11 @@ void Sudoku::printSVG(string path = "", int index = 0, int perPage = 1)
       {
         if (perPage == 1)
         {
-          int x = 50 * j + 16;
-          int y = 50 * i + 35;
+          float x = 72.22 * (float)j + 23.1104;
+          float y = 72.22 * (float)i + 50.554;
 
           stringstream text;
           text << "<text x=\"" << x << "\" y=\"" << y << "\" style=\"font-weight:bold\" font-size=\"30px\">" << this->grid[i][j] << "</text>\n";
-
           outFile << text.rdbuf();
         }
         if (perPage == 4)
@@ -395,7 +394,6 @@ void Sudoku::printSVG(string path = "", int index = 0, int perPage = 1)
 
           stringstream text;
           text << "<text x=\"" << xf << "\" y=\"" << yf << "\" style=\"font-weight:bold\" font-size=\"23.3331px\">" << this->grid[i][j] << "</text>\n";
-
           outFile << text.rdbuf();
         }
       }

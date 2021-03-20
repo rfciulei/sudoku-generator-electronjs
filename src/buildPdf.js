@@ -18,7 +18,7 @@ const buildPdf = (perPage) => {
 
     if (perPage == 1) {
       if ((`puzzle(\d+).svg`, file)) {
-        SVGtoPDF(doc, svg, 20, 40);
+        SVGtoPDF(doc, svg, 57.5, 146.6);
 
         if (files.indexOf(file) != files.length - 1) doc.addPage();
       }
