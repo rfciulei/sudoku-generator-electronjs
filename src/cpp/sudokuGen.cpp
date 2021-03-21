@@ -494,6 +494,10 @@ void Sudoku::calculateDifficulty()
 // START: The main function
 int main(int argc, char *argv[])
 {
+
+  if (argc != 5)
+    return 0;
+
   // ISSUE args not parsed ok
   int size = atoi(argv[1]);
   int difficulty = atoi(argv[2]);
