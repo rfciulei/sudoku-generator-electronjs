@@ -1,23 +1,20 @@
 {
-  "name": "electron-quick-start",
+  "name": "sudoku-generator",
   "version": "1.0.0",
-  "description": "A minimal Electron application",
+  "description": "app that generates pdfs with lots of sudoku games.",
   "main": "src/main.js",
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make"
   },
-  "repository": "https://github.com/electron/electron-quick-start",
+  "repository": "https://github.com/rfciulei/sudoku-generator-electronjs.git",
   "keywords": [
-    "Electron",
-    "quick",
-    "start",
-    "tutorial",
-    "demo"
+    "electron",
+    "sudoku"
   ],
-  "author": "GitHub",
-  "license": "CC0-1.0",
+  "author": "rfciulei",
+  "license": "mit",
   "devDependencies": {
     "@electron-forge/cli": "^6.0.0-beta.54",
     "@electron-forge/maker-deb": "^6.0.0-beta.54",
