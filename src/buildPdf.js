@@ -1,7 +1,6 @@
 let fs = require("fs");
 let PDFDocument = require("pdfkit");
 let SVGtoPDF = require("svg-to-pdfkit");
-const { scale } = require("scale-that-svg");
 const path = require("path");
 
 //takes all svgs from puzzles directory and merges into sudoku.pdf
