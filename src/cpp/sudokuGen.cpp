@@ -32,7 +32,7 @@ public:
   void countSoln(int &number);
   void genPuzzle();
   bool verifyGridStatus();
-  void printSVG(string, int, int);
+  void printSVG(int, int);
   void calculateDifficulty();
   int branchDifficultyScore();
 };
@@ -358,7 +358,7 @@ void Sudoku::genPuzzle()
 // END: Generate puzzle
 
 // START: Printing into SVG file
-void Sudoku::printSVG(string path = "", int index = 0, int perPage = 1)
+void Sudoku::printSVG(int index = 0, int perPage = 1)
 {
   string fileName;
   if (perPage == 4)
@@ -529,7 +529,7 @@ int main(int argc, char *argv[])
     puzzle->printGrid();
 
     // Printing the grid into SVG file
-    puzzle->printSVG("", i, perPage);
+    puzzle->printSVG(i, perPage);
 
     // freeing the memory
     delete puzzle;
