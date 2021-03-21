@@ -30,20 +30,20 @@ const buildPdf = (perPage) => {
     } else if (perPage == 4) {
       if ((`puzzle(\d+).svg`, file)) {
         if ((files.indexOf(file) + 1) % 4 == 0) {
-          SVGtoPDF(doc, svg, 325, 121);
-          // console.log("up-left");
+          //down-right
+          SVGtoPDF(doc, svg, 325, 421);
         }
         if ((files.indexOf(file) + 1) % 4 == 1) {
+          //up-left
           SVGtoPDF(doc, svg, 25, 121);
-          // console.log("up-right");
         }
         if ((files.indexOf(file) + 1) % 4 == 2) {
-          SVGtoPDF(doc, svg, 25, 121 + 300);
-          // console.log("down-left");
+          //up-right
+          SVGtoPDF(doc, svg, 325, 121);
         }
         if ((files.indexOf(file) + 1) % 4 == 3) {
-          SVGtoPDF(doc, svg, 325, 121 + 300);
-          // console.log("down-right");
+          //down-left
+          SVGtoPDF(doc, svg, 25, 421);
         }
 
         if (
