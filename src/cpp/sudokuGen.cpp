@@ -362,9 +362,9 @@ void Sudoku::printSVG(int index = 0, int perPage = 1)
 {
   string fileName;
   if (perPage == 4)
-    fileName = "svgHead_4_per_page.txt";
+    fileName = "resources/svgHead_4_per_page.txt";
   else if (perPage == 1)
-    fileName = "svgHead_1_per_page.txt";
+    fileName = "resources/svgHead_1_per_page.txt";
   ifstream file1(fileName.c_str());
   stringstream svgHead;
   svgHead << file1.rdbuf();
