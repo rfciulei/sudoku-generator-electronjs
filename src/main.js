@@ -4,7 +4,7 @@ const path = require("path");
 const fs = require("fs");
 const child_process = require("child_process");
 const spawn = require("child_process").spawn;
-const buildPdf = require("./buildPdf");
+const generatePdf = require("./generatePdf");
 
 let cppDirPath = path.join(__dirname, "cpp");
 let execPath = path.join(cppDirPath, "sudokuGen.exe");
@@ -94,7 +94,7 @@ const executeCpp = (win, args, data) => {
       console.log("[FINISHED][SUCCESS] : sudokuGen.exe execution");
       win.webContents.send("fromMain", "finished");
       // will build pdf if code return 0
-      buildPdf(data.perPage);
+      generatePdf(data.perPage);
     } else {
       console.log("[FINISHED][FAIL] : sudokuGen.exe execution");
       win.webContents.send("fromMain", "finished");
