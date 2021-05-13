@@ -7,7 +7,7 @@
   # Run 
   <ul>
    <li>npm install </li>
-    <li>npm start ( if variable compile is set to true will use g++ to compile the c++ executable, else just do it manually and set it to false, until windows-build-tools will be supported ) </li>
+    <li>npm start  </li>
   </ul>
 
 
